@@ -13,7 +13,8 @@ The entire simulation operates as a continuous, deterministic loop, divided into
 
 The following master schematic illustrates this strict hierarchy, demonstrating the unidirectional flow of dependencies and the absolute segregation of duties.
 
-![alt text](image.png)
+<img width="16384" height="7646" alt="image" src="https://github.com/user-attachments/assets/3892d035-8fa7-47ac-a841-d098e4bc7a0c" />
+
 
 *(The reader is advised to refer back to this schematic whilst navigating the detailed specifications of the Sub-Orchestrators in the subsequent sections.)*
 
