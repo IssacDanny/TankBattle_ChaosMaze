@@ -21,12 +21,17 @@ void WorldUpdateOrchestrator::execute(const TimeLedger& time, const InputLedger&
     // Phase A: Locomotion
     // We delegate the movement of the tanks to the movement specialist.
     // Note how we only pass the relevant player's input to each call.
-    tankMovement.execute(input.player1, time, kinematics, p1Mutator);
-    tankMovement.execute(input.player2, time, kinematics, p2Mutator);
+    tankMovement.execute(input.player1, time, kinematics, world.player1, p1Mutator);
+    tankMovement.execute(input.player2, time, kinematics, world.player2, p2Mutator);
 
     // We move all active bullets currently in flight.
-    for (auto& bMutator : bulletMutators) {
-        bulletMovement.execute(time, kinematics, bMutator);
+    for (size_t i = 0; i < world.bulletPool.size(); ++i) {
+        bulletMovement.execute(
+            time,
+            kinematics,
+            world.bulletPool[i],
+            bulletMutators[i]
+        );
     }
 
     // Phase B: Conflict Resolution

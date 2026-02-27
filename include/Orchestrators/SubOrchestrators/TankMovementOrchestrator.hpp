@@ -15,5 +15,6 @@ public:
     void execute(const InputLedger::PlayerInput& input, 
               const TimeLedger& time, 
               const KinematicsTransformer& kinematics, 
+              const TankData& currentTankState,
               TankMutator& mutator);
 };
