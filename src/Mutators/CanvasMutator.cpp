@@ -10,29 +10,78 @@ CanvasMutator::CanvasMutator(DisplayLedger& ledger) : display(ledger) {}
 
 void CanvasMutator::clear() 
 {
-    // TODO: Cast display.renderContext to (SDL_Renderer*).
-    // TODO: Call SDL_SetRenderDrawColor (usually to black).
-    // TODO: Call SDL_RenderClear.
+    auto* renderer = static_cast<SDL_Renderer*>(display.renderContext);
+    if (!renderer) return;
+
+    // Clear to black
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
+    SDL_RenderClear(renderer);
 }
 
 void CanvasMutator::present() 
 {
-    // TODO: Call SDL_RenderPresent using the renderContext.
+    auto* renderer = static_cast<SDL_Renderer*>(display.renderContext);
+    if (!renderer) return;
+
+    SDL_RenderPresent(renderer);
 }
 
 void CanvasMutator::drawSprite(void* texture, const AABB& destination, float angleDegrees, const Vector2D& centre) 
 {
-    // TODO: Prepare an SDL_Rect using the destination AABB data.
-    // TODO: Prepare an SDL_Point using the centre Vector2D data.
-    // TODO: Call SDL_RenderCopyEx to draw the texture with rotation.
-    // Note: Cast texture to (SDL_Texture*) and renderContext to (SDL_Renderer*).
+    auto* renderer = static_cast<SDL_Renderer*>(display.renderContext);
+    auto* tex = static_cast<SDL_Texture*>(texture);
+
+    if (!renderer || !tex) return;
+
+    SDL_Rect destRect{
+        static_cast<int>(destination.x),
+        static_cast<int>(destination.y),
+        static_cast<int>(destination.width),
+        static_cast<int>(destination.height)
+    };
+
+    SDL_Point pivot{
+        static_cast<int>(centre.x),
+        static_cast<int>(centre.y)
+    };
+
+    SDL_RenderCopyEx(
+        renderer,
+        tex,
+        nullptr,          // srcRect: nullptr = full texture
+        &destRect,
+        static_cast<double>(angleDegrees),
+        &pivot,
+        SDL_FLIP_NONE
+    );
 }
 
 void CanvasMutator::drawText(const std::string& text, int x, int y) 
 {
-    // TODO: Use TTF_RenderText_Solid to create an SDL_Surface.
-    // TODO: Convert the surface to an SDL_Texture.
-    // TODO: Query the texture for width/height and create a destination SDL_Rect.
-    // TODO: Call SDL_RenderCopy to paint the text.
-    // TODO: Crucial: Clean up the temporary surface and texture to avoid memory leaks!
+    auto* renderer = static_cast<SDL_Renderer*>(display.renderContext);
+    auto* font = static_cast<TTF_Font*>(display.fontAsset); // from DisplayLedger :contentReference[oaicite:1]{index=1}
+
+    if (!renderer || !font) return;
+    if (text.empty()) return;
+
+    SDL_Color color{ 255, 255, 255, 255 }; // white
+
+    SDL_Surface* surface = TTF_RenderText_Solid(font, text.c_str(), color);
+    if (!surface) return;
+
+    SDL_Texture* tex = SDL_CreateTextureFromSurface(renderer, surface);
+    if (!tex) {
+        SDL_FreeSurface(surface);
+        return;
+    }
+
+    int w = 0, h = 0;
+    SDL_QueryTexture(tex, nullptr, nullptr, &w, &h);
+
+    SDL_Rect destRect{ x, y, w, h };
+    SDL_RenderCopy(renderer, tex, nullptr, &destRect);
+
+    // Cleanup (crucial: avoid leaks every frame)
+    SDL_DestroyTexture(tex);
+    SDL_FreeSurface(surface);
 }

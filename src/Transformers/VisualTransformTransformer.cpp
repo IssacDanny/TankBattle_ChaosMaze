@@ -5,8 +5,8 @@
  */
 float VisualTransformTransformer::radiansToDegrees(float radians) const 
 {
-    // TODO: Return radians * (180.0f / PI).
-    return 45.0;
+    constexpr float kPi = 3.14159265358979323846f;
+    return radians * (180.0f / kPi);
 }
 
 /**
@@ -17,5 +17,5 @@ Vector2D VisualTransformTransformer::calculateCentre(const AABB& box) const
 {
     // TODO: Return { box.width / 2.0f, box.height / 2.0f }.
     // Note: This is the local centre relative to the sprite's top-left.
-    return { 0.0f, 0.0f };
+    return { box.width / 2.0f, box.height / 2.0f };
 }

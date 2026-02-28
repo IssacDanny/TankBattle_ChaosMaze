@@ -13,15 +13,26 @@ void EntityRenderOrchestrator::execute(
     CanvasMutator& canvas, 
     const DisplayLedger& display) 
 {
-    // TODO: Render Player 1 and Player 2 Tanks.
-    // For each tank:
-    //   1. Use math.calculateCentre(tank.boundingBox) to find the pivot.
-    //   2. Use math.radiansToDegrees() for both bodyAngle and turretAngle.
-    //   3. Command canvas.drawSprite() for the Body.
-    //   4. Command canvas.drawSprite() for the Turret (using the same centre).
+    auto renderTank = [&](const TankData& tank)
+        {
+            const Vector2D pivot = math.calculateCentre(tank.boundingBox);
+            const float bodyDeg = math.radiansToDegrees(tank.bodyAngle);
+            const float turretDeg = math.radiansToDegrees(tank.turretAngle);
 
-    // TODO: Render Active Bullets.
-    // Iterate through world.bulletPool:
-    //   If bullet.isActive is true:
-    //     Command canvas.drawSprite() using the bulletTexture.
+            canvas.drawSprite(display.tankBodyTexture, tank.boundingBox, bodyDeg, pivot);
+            canvas.drawSprite(display.tankTurretTexture, tank.boundingBox, turretDeg, pivot);
+        };
+
+    // Player 1 + Player 2
+    renderTank(world.player1);
+    renderTank(world.player2);
+
+    // Bullets (object pool)
+    for (const auto& bullet : world.bulletPool)
+    {
+        if (!bullet.isActive) continue;
+
+        const Vector2D pivot = math.calculateCentre(bullet.boundingBox);
+        canvas.drawSprite(display.bulletTexture, bullet.boundingBox, 0.0f, pivot);
+    }
 }

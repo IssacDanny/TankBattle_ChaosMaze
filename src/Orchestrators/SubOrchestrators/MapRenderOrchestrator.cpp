@@ -11,8 +11,11 @@ void MapRenderOrchestrator::execute(
     CanvasMutator& canvas, 
     void* wallTexture) 
 {
-    // TODO: Iterate through every AABB in level.walls.
-    // TODO: For each wall, command canvas.drawSprite().
-    // Note: Walls are static, so angleDegrees should be 0.0f and 
-    // the centre point can be a zeroed Vector2D.
+    const Vector2D zeroCentre{ 0.0f, 0.0f };
+
+    // Each wall is an AABB in level.walls
+    for (const auto& wall : level.walls)
+    {
+        canvas.drawSprite(wallTexture, wall, 0.0f, zeroCentre);
+    }
 }
