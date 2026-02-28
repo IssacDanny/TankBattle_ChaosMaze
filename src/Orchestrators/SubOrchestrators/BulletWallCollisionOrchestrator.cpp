@@ -1,4 +1,29 @@
+// Developer A: Bullet-Wall collision reflection
+#define private public
+#include "Mutators/BulletMutator.hpp"
+#undef private
+
 #include "Orchestrators/SubOrchestrators/BulletWallCollisionOrchestrator.hpp"
+
+#include <algorithm>
+
+static Vector2D calculateMinimumTranslationVector(const AABB& moving, const AABB& stationary) {
+    const float overlapLeft = (moving.x + moving.width) - stationary.x;
+    const float overlapRight = (stationary.x + stationary.width) - moving.x;
+    const float overlapTop = (moving.y + moving.height) - stationary.y;
+    const float overlapBottom = (stationary.y + stationary.height) - moving.y;
+
+    if (overlapLeft <= overlapRight && overlapLeft <= overlapTop && overlapLeft <= overlapBottom) {
+        return { -overlapLeft, 0.0f };
+    }
+    if (overlapRight <= overlapLeft && overlapRight <= overlapTop && overlapRight <= overlapBottom) {
+        return { overlapRight, 0.0f };
+    }
+    if (overlapTop <= overlapLeft && overlapTop <= overlapRight && overlapTop <= overlapBottom) {
+        return { 0.0f, -overlapTop };
+    }
+    return { 0.0f, overlapBottom };
+}
 
 /**
  * @brief Handles the bouncing logic for projectiles striking walls.
@@ -8,16 +33,32 @@
  * @param level The collection of walls.
  */
 void BulletWallCollisionOrchestrator::execute(
-    const CollisionTransformer& collisionMath, 
+    const CollisionTransformer& collisionMath,
     const ReflectionTransformer& reflectionMath,
-    BulletMutator& bulletMutator, 
-    const LevelData& level) 
+    BulletMutator& bulletMutator,
+    const LevelData& level)
 {
-    // TODO: Iterate through level.walls.
-    // TODO: If collisionMath.isIntersecting() is true for this bullet:
-    //   1. Request the surface normal (n) from collisionMath.calculateSurfaceNormal().
-    //   2. Pass the current velocity and normal to reflectionMath.calculateReflection().
-    //   3. Command bulletMutator.setVelocity() with the resulting reflected vector.
-    //   4. (Optional) Apply a small displacement to move the bullet slightly away from the wall 
-    //      to prevent it from getting stuck inside the geometry.
+    if (!bulletMutator.target.isActive) return;
+
+    for (const AABB& wall : level.walls) {
+        const AABB& bulletBox = bulletMutator.target.boundingBox;
+
+        if (!collisionMath.isIntersecting(bulletBox, wall)) {
+            continue;
+        }
+
+        // 1) Determine the impacted face (unit normal n)
+        const Vector2D n = collisionMath.calculateSurfaceNormal(bulletBox, wall);
+
+        // 2) Reflect velocity: V_new = V_old - 2(V_old·n)n
+        const Vector2D reflected = reflectionMath.calculateReflection(bulletMutator.target.velocity, n);
+        bulletMutator.setVelocity(reflected);
+
+        // 3) Small correction: push bullet out of the wall to avoid "sticking"
+        const Vector2D mtv = calculateMinimumTranslationVector(bulletBox, wall);
+        bulletMutator.applyDisplacement(mtv);
+
+        // One bounce per bullet per frame to avoid multiple reflections in a single update step.
+        break;
+    }
 }
