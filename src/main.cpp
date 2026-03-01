@@ -5,7 +5,7 @@
  * Its only duty is to instantiate the Game and commence the loop.
  */
 int main(int argc, char* argv[]) {
-    GameLoopOrchestrator game;
+    GameLoopOrchestrator game{};
     
     // The Sovereign takes command
     game.execute();

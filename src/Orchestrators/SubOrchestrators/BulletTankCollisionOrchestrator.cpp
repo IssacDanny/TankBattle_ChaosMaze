@@ -1,18 +1,20 @@
 #include "Orchestrators/SubOrchestrators/BulletTankCollisionOrchestrator.hpp"
 
-/**
- * @brief Registers hits on tanks and applies damage.
- * @param collisionMath Used to detect the hit.
- * @param bulletMutator The projectile agent (to be deactivated).
- * @param targetTankMutator The victim agent (to be damaged).
- */
 void BulletTankCollisionOrchestrator::execute(
-    const CollisionTransformer& collisionMath, 
-    BulletMutator& bulletMutator, 
-    TankMutator& targetTankMutator) 
+    const CollisionTransformer& collisionMath,
+    const BulletData& bulletData,
+    BulletMutator& bulletMutator,
+    const TankData& tankData,
+    TankMutator& tankMutator)
 {
-    // TODO: Use collisionMath.isIntersecting() to check the bullet against the tank.
-    // TODO: If a hit is confirmed:
-    //   1. Command targetTankMutator.takeDamage().
-    //   2. Command bulletMutator.deactivate() to remove it from the world.
+    // We read from the 'bulletData' (Spectacles), not the mutator!
+    if (!bulletData.isActive) return;
+
+    if (!collisionMath.isIntersecting(bulletData.boundingBox, tankData.boundingBox)) {
+        return;
+    }
+
+    // We use the Mutators only to write the changes
+    tankMutator.takeDamage(1); 
+    bulletMutator.deactivate();
 }

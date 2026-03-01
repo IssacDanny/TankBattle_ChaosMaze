@@ -6,7 +6,11 @@
 class BulletTankCollisionOrchestrator {
 public:
     // Mediates the interaction between a projectile and a combatant
-    void execute(const CollisionTransformer& collisionMath, 
-              BulletMutator& bulletMutator, 
-              TankMutator& targetTankMutator);
+    void execute(
+        const CollisionTransformer& collisionMath,
+        const BulletData& bulletData,
+        BulletMutator& bulletMutator,
+        const TankData& tankData,
+        TankMutator& tankMutator
+    );
 };

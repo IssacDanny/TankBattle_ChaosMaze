@@ -42,10 +42,14 @@ struct DisplayLedger {
     void* windowHandle;
     void* renderContext;
     
-    // Assets
-    void* tankBodyTexture;
-    void* tankTurretTexture;
+    void* p1Body;
+    void* p1Turret;
+    void* p1BulletTexture;
+    void* p2Body;
+    void* p2Turret;
+    void* p2BulletTexture;
+    
     void* wallTexture;
-    void* bulletTexture;
+    void* grassTexture;
     void* fontAsset;
 };

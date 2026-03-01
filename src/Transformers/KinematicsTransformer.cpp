@@ -10,10 +10,12 @@ Vector2D KinematicsTransformer::calculateDisplacement(float speed, float angleIn
     // TODO: Calculate velocity components using trigonometry.
     // vx = speed * cos(angle)
     // vy = speed * sin(angle)
-    
+    float vx = speed * std::cos(angleInRadians);
+	float vy = speed * std::sin(angleInRadians);
+
     // TODO: Multiply the velocity by deltaTime to get displacement.
     // return { vx * deltaTime, vy * deltaTime }
-    return { 0.0, 0.0 };
+    return { vx * deltaTime , vy * deltaTime };
 }
 
 /**
@@ -22,5 +24,7 @@ Vector2D KinematicsTransformer::calculateDisplacement(float speed, float angleIn
 Vector2D KinematicsTransformer::calculateVelocity(float speed, float angleInRadians) const 
 {
     // TODO: Return a Vector2D where x = speed * cos(angle) and y = speed * sin(angle).
-    return { 0.0, 0.0 };
+	float x = speed * std::cos(angleInRadians);
+	float y = speed * std::sin(angleInRadians);
+    return { x, y };
 }

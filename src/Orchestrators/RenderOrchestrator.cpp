@@ -15,7 +15,7 @@ void RenderOrchestrator::execute(const WorldLedger& world, DisplayLedger& displa
 
     // Phase A: The Environment
     // We paint the static maze walls first. They form the backdrop of our theatre.
-    mapRenderer.execute(world.maze, canvas, display.wallTexture);
+    mapRenderer.execute(world.maze, canvas, display.wallTexture, display.grassTexture);
 
     // Phase B: The Actors
     // We paint the tanks and bullets. This specialist will use the 

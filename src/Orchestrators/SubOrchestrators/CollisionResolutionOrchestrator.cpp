@@ -1,3 +1,4 @@
+// Developer A: Conflict-resolution chain coordinator
 #include "Orchestrators/SubOrchestrators/CollisionResolutionOrchestrator.hpp"
 
 /**
@@ -9,20 +10,38 @@
  * @param bulletMutators List of agents for all active projectiles.
  * @param level The static environment data.
  */
-void CollisionResolutionOrchestrator::execute(
-    const CollisionTransformer& collisionMath, 
-    const ReflectionTransformer& reflectionMath,
-    TankMutator& p1Mutator, 
-    TankMutator& p2Mutator, 
-    std::vector<BulletMutator>& bulletMutators, 
-    const LevelData& level) 
-{
-    // TODO: Phase 1 - Resolve Tank vs. Wall collisions for both players.
-    // Call tankWallResolver.main() for p1Mutator and p2Mutator.
 
-    // TODO: Phase 2 - Iterate through the bulletMutators.
-    // For each bullet that is currently 'active':
-    //   A. Resolve Bullet vs. Wall (Bouncing).
-    //   B. Resolve Bullet vs. Tanks (Damage). 
-    //      Note: Ensure a bullet does not damage its own creator (ownerID check).
+void CollisionResolutionOrchestrator::execute(
+    const CollisionTransformer& collisionMath,
+    const ReflectionTransformer& reflectionMath,
+    const WorldLedger& world,
+    TankMutator& p1Mutator,
+    TankMutator& p2Mutator,
+    std::vector<BulletMutator>& bulletMutators,
+    const LevelData& level)
+{
+    // Phase 1: Tanks vs. Walls
+    tankWallResolver.execute(collisionMath, world.player1, p1Mutator, level);
+    tankWallResolver.execute(collisionMath, world.player2, p2Mutator, level);
+
+    // Phase 2 & 3: Bullets
+    for (size_t i = 0; i < bulletMutators.size(); ++i) {
+        const BulletData& bData = world.bulletPool[i];
+        BulletMutator& bMutator = bulletMutators[i];
+
+        if (!bData.isActive) continue;
+
+        // Phase 2: Wall bounce
+        bulletWallResolver.execute(collisionMath, reflectionMath, bData, bMutator, level);
+        
+        if (!bData.isActive) continue;
+
+        // Phase 3: Damage (Logic based on ownerID)
+        if (bData.ownerID == 1) {
+            bulletTankResolver.execute(collisionMath, bData, bMutator, world.player2, p2Mutator);
+        }
+        else if (bData.ownerID == 2) {
+            bulletTankResolver.execute(collisionMath, bData, bMutator, world.player1, p1Mutator);
+        }
+    }
 }

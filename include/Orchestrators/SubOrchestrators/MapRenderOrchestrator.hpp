@@ -10,7 +10,5 @@ public:
      * @param canvas The agent authorised to paint the screen
      * @param wallTexture The visual asset for the walls
      */
-    void execute(const LevelData& level, 
-              CanvasMutator& canvas, 
-              void* wallTexture);
+   void execute(const LevelData& level, CanvasMutator& canvas, void* wallTexture, void* grassTexture);
 };

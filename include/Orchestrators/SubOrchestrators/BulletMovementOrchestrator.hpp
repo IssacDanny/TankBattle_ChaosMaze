@@ -12,6 +12,7 @@ public:
      * @param mutator The agent authorised to move the bullet
      */
     void execute(const TimeLedger& time, 
-              const KinematicsTransformer& kinematics, 
+              const KinematicsTransformer& kinematics,
+		      const BulletData& bullet,
               BulletMutator& mutator);
 };

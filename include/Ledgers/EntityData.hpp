@@ -25,6 +25,7 @@ struct BulletData {
     bool isActive;        // If false, this bullet is "dead" and waiting in the pool
     int ownerID;          // 1 for Player 1, 2 for Player 2 (to prevent self-damage)
     
+    float lifespan;
     AABB boundingBox;
 };
 
@@ -38,3 +39,4 @@ struct LevelData {
     Vector2D p1Spawn;
     Vector2D p2Spawn;
 };
+

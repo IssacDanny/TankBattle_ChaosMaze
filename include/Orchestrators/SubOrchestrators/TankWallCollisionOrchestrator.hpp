@@ -6,7 +6,10 @@
 class TankWallCollisionOrchestrator {
 public:
     // Mediates the interaction between a tank and the maze boundaries
-    void execute(const CollisionTransformer& collisionMath, 
-              TankMutator& tankMutator, 
-              const LevelData& level);
+    void execute(
+        const CollisionTransformer& collisionMath, 
+        const TankData& tankData, // Second argument: Spectacles
+        TankMutator& tankMutator, // Third argument: Pen
+        const LevelData& level
+    );
 };
