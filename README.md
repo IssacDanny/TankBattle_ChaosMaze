@@ -61,8 +61,6 @@ The project utilizes a streamlined CMake configuration. All commands should be i
 ## Physics Implementation & Reflection Mathematics 
 For the physics implementation of the game we conceptualize it as a **State Machine**. The system exists as a sequence of discrete snapshots. The state at time `(t + dt)` is a strictly logical consequence of the state at time `(t)` and the external player inputs `(I)`.
 
----
-
 ### 2. THE STATE SPACE (S)
 The state `S` is defined as the tuple `(T, B, E)`, representing the total knowledge of the universe at any given moment.
 
@@ -89,15 +87,11 @@ The immutable stage:
 *   **`W`** (`List`) : A set of static `AABB` structures (Walls).
 *   **`Spawn`** (`List`) : Constant starting coordinates for `T1` and `T2`.
 
----
-
 ### 3. THE INITIAL STATE (Init)
 At `t = 0`, the system is initialised as follows:
 *   **Tanks:** Placed at `Spawn_1` and `Spawn_2`; `H` (Health points) = 100, `C` (Weapon cooldown timer) = 0.
 *   **Projectiles:** All `Active` flags = `False`.
 *   **Environment:** Maze walls (`W`) loaded from the level blueprint.
-
----
 
 ### 4. THE NEXT-STATE OPERATIONS
 The mathematical transition of entities relies upon three primary operations:
@@ -151,8 +145,6 @@ Adjudicates state when an intersection `I(AABB_1, AABB_2)` is detected.
 *   `H` : The current health points.
 *   `d` : The discrete damage constant.
 *   *Note:* The projectile's `Active` flag simultaneously transitions to `False`.
-
----
 
 ### 5. THE NEXT-STATE RELATIONSHIP (S -> S')
 The transition from State `S` to State `S'` is a composite function. It is defined as a sequence of intermediate "Theoretical States" that are processed and filtered until a valid Final State is achieved.
@@ -219,8 +211,6 @@ The system applies the Law of Conflict Resolution to the Theoretical State to en
 
 *   **Result:** The resulting State `S'` is the only state exhibited to the player.
 
----
-
 ### 6. THE SOVEREIGN GAME LOOP
 The loop is a relentless, sequential cycle. Each iteration represents a single transition from State `S` to State `S'`.
 
@@ -260,8 +250,6 @@ The loop is a relentless, sequential cycle. Each iteration represents a single t
              +--------------------------- [ REPEAT AD INFINITUM ]
 ```
 
----
-
 ### 7. THE ROLE OF DELTA TIME (dt)
 Real-world time is continuous, but our simulation is discrete. Delta Time acts as the mathematical bridge between these two realms.
 
@@ -280,6 +268,7 @@ Game States (Discrete)       [ S_n ]           [ S_n+1 ]           [ S_n+2 ]
 *   **If the computer is SLOW:** `dt` is LARGE (e.g., 0.033s). The loop runs rarely.
 
 By multiplying all movement by `dt` (e.g., `Velocity * dt`), we ensure that the Tank travels the **SAME** physical distance in 1 second of real-world time, regardless of how many frames the computer manages to produce.
+
 ---
 
 ## Architectural Note
