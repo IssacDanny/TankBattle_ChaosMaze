@@ -9,17 +9,8 @@
 "Tank Battle: Chaos Maze" is a top-down, local multiplayer combat simulation developed in C++ using the SDL2 framework. The programme challenges two players to navigate a treacherous maze, utilizing vector-based movement and Newtonian reflection physics to outmanoeuvre and destroy their opponent.
 This project was engineered with a adherence to the my paradigm which I called **Orchestrator-Transformer-Mutator** , ensuring a total separation of mathematical logic, state management, and hardware interfacing.
 
-## Architectural Deep-Dive
-While this document provides the essential operational facts, the true soul of the machine resides in our design documentation. 
-
-The validator is strongly encouraged to peruse the **[DESIGN.md](./DESIGN.md)** file for a comprehensive examination of:
-*   **The Holistic Architecture:** A detailed breakdown of the Orchestrator-Transformer-Mutator paradigm.
-*   **The Chain of Command:** A visual and textual map of the hierarchical delegation that governs the simulation.
-*   **Algorithm:** Step-by-step descriptions of the sub-orchestrators, from ballistics reflection to the "Painter's Algorithm" in the rendering engine.
-
-I believe that a programme is only as strong as its design, and the `DESIGN.md` serves as the definitive blueprint for this implementation.
-
 ---
+
 ## Controls (Local Multiplayer)
 The simulation processes simultaneous inputs for two combatants via a single keyboard.
 
