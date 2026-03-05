@@ -262,23 +262,10 @@ By multiplying all movement by `dt` (e.g., `Velocity * dt`), we ensure that the 
 
 ---
 
-## Architectural Note
-The codebase is structured using a bespoke "Orchestrator-Transformer-Mutator" pattern. 
-*   **Transformers** are pure, stateless functions handling all trigonometry and vector math.
-*   **Mutators** are the only authorised agents permitted to alter game state.
-*   **Orchestrators** dictate the sequence of the game loop without performing calculations themselves. 
-This ensures absolute predictability, eliminates race conditions, and strictly satisfies the Open/Closed Principle.
-
----
-
 ## Asset Sources
-*(Note to Validator: All visual and audio assets utilised in this programme were procured from the following sources, adhering to their respective licensing agreements.)*
+*(Note to Validator: All visual assets utilised in this programme were procured from the following sources)*
 
-*   **Tank & Turret Sprites:** [Insert Source/URL Here - e.g., Kenney.nl]
-*   **Maze Textures (Walls/Floor):** [Insert Source/URL Here]
-*   **Audio (Shooting/Bouncing/Explosions):** [Insert Source/URL Here]
-*   **Typography/Fonts:** [Insert Source/URL Here]
+*   **Tank & Turret Sprites:** [https://kenney.nl/assets/top-down-tanks-redux]
+*   **Maze Textures (Walls/Floor):** [https://kenney.nl/assets/top-down-tanks-redux] (Floor), [https://www.pinterest.com/pin/590323463713774937/] (Walls)
 
-
-***
 
