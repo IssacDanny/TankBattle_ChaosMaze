@@ -22,6 +22,7 @@ private:
     // Private helper to initialise the hardware and load assets
     bool initialise();
     void shutdown();
+    void resetWorld();
 
 public:
     /**

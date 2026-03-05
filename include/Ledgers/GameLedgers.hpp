@@ -12,6 +12,7 @@ struct TimeLedger {
 // --- 2. The Dispatch ---
 struct InputLedger {
     bool isRunning;            // Main loop condition
+    bool restartRequested;
     
     // We define the role of "PlayerInput" so it can be passed to specialists
     struct PlayerInput {
@@ -25,9 +26,18 @@ struct InputLedger {
 };
 
 // --- 3. The Simulation State ---
+enum class GameState {
+    START_SCREEN,
+    PLAYING,
+    GAME_OVER
+};
+
 struct WorldLedger {
     TankData player1;
     TankData player2;
+
+    GameState state = GameState::START_SCREEN; // Start at the beginning
+    int winnerID = 0;                          // 0: None, 1: P1, 2: P2
     
     // A pre-allocated pool of ammunition to avoid runtime allocation
     std::vector<BulletData> bulletPool;

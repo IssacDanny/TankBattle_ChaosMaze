@@ -74,4 +74,23 @@ void WorldUpdateOrchestrator::execute(const TimeLedger& time, const InputLedger&
     collisionResolution.execute(collisionMath, reflectionMath, world, p1Mutator, p2Mutator, bulletMutators, world.maze);
     p1Mutator.updateCooldown(time.deltaTime);
     p2Mutator.updateCooldown(time.deltaTime);
+
+    // 1. Check Health Conditions
+    if (world.player1.health <= 0) {
+        world.state = GameState::GAME_OVER;
+        world.winnerID = 2;
+    } else if (world.player2.health <= 0) {
+        world.state = GameState::GAME_OVER;
+        world.winnerID = 1;
+    }
+
+    // 2. Check Score Conditions (e.g., first to 5 points)
+    const int SCORE_LIMIT = 5;
+    if (world.player1.score >= SCORE_LIMIT) {
+        world.state = GameState::GAME_OVER;
+        world.winnerID = 1;
+    } else if (world.player2.score >= SCORE_LIMIT) {
+        world.state = GameState::GAME_OVER;
+        world.winnerID = 2;
+    }
 }
